@@ -1,0 +1,1 @@
+,Current (nA),Magnetic Field (G),Sample Thickness (nm),Sheet Resistance (ohms/square),Bulk Resistivity (ohm*meter),Semiconductor Type,Sheet Carrier Density (cm^-2),Bulk Carrier Density (cm^-3),Hall Mobility (cm^2*V^-1*s^-1)

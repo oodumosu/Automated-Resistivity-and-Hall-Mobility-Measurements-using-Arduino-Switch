@@ -1,4 +1,6 @@
 The goal of this project was to grow and characterize thin, semiconducting ZnO films. To accomplish this, I created a Labview program to interface with an ArduinoMega, which operate a 16-channel relay module. This relay was then connected to a nano-voltmeter, current source, and my sample film (which would be in a uniform magnetic field for some measurements). Labview would then compile the data into a .csv file, which my Python code would interpret and record measurements for the sheet resistance, bulk resistivity, semiconductor type, Sheet Carrier Density, Bulk Carrier Density, and Hall Mobility.
+The Labview Master vi's take a total of 800 measurements for an approximate run time of 2 hours and 15 minutes.
+The supplimentary Labview vi's that utilize one GIPB take 1,600 measurements for an approximate run time of 3 hours and 19 minutes.
 
 Contributions
 This project was funded by Ithaca College H&S Summer Scholars Program and the Dana Internship Program, and completed in the summer of 2019.

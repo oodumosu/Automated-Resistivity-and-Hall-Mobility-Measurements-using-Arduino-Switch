@@ -1,7 +1,5 @@
 '''
-Program works with the way Labview will record the data (50 trials)
-Will calculate the magnitude of the electric field used from user input of amps and distance between field.
-Does not record error margins for values obtained.
+Program works with the way Labview will record the data. Does not record error margins for values obtained
 '''
 from math import log, pi, exp
 
@@ -52,7 +50,7 @@ def get_average(a_list):
 def error_check(R1, R2, R3, R4, R5, R6, R7, R8):
   '''
   Uses EQ8 & EQ9 (NIST) to check that error is <5% (preferably <3%)
-  :side effect: prints high error warning for the uncertain value(s), or notifies user of minimal uncertainity
+  :side effect: prints high error warning for the uncertain value(s), or notifies user of low uncertainity
   '''
   sum1 = R1 + R5
   sum2 = R2 + R6
@@ -248,36 +246,6 @@ def running_file(Rs, p, stype, scdens, bcdens, hmob, current, d, mag_field, user
   of.write(str(hmob))
   of.close()
 
-def Bfield():
-  '''
-  Use linearization of magetization curve to find the magnitude of the magnetic feild (Tesla--> Gauss) as a function of Current
-  :return: magnitude of magnetic field in gauss
-  '''
-  amps = float(input("Current of magnet (amps)? "))
-  dis = float(input("Gap distance between field plates (inches)? "))
-  if dis < 0.625:
-    tesla = (9.6 / 10) * amps
-    gauss = tesla * 10000
-    return gauss
-  elif 0.625 <= dis < 0.875:
-    tesla = (9.2 / 15) * amps
-    gauss = tesla * 10000
-    return gauss
-  elif 0.875 <= dis < 1.25:
-    tesla = 0.45 * amps
-    print(tesla)
-    gauss = tesla * 10000
-    print(gauss)
-    print(dis, amps, tesla, gauss)
-    return gauss
-  elif 1.25 <= dis < 1.75:
-    tesla = (8.6 / 30) * amps
-    gauss = tesla * 10000
-    return gauss
-  else:
-    tesla = (6.8 / 30) * amps
-    gauss = tesla * 10000
-    return gauss
   
 def main():
   '''
@@ -286,9 +254,9 @@ def main():
   print("\n------- WELCOME --------")
   #Get user input on data parameters
   filename = input("\n\"Input filename of raw data voltages (V) (.txt)\": ")
-  current = float(input("Input Current of Current Source (in nA):  ")) 
+  current = float(input("Input Current (in nA):  ")) 
   d = float(input("Input sample thickness (in nm): "))
-  mag_field = Bfield()
+  mag_field = float(input("Input magnetic field (in G): "))
   
   #Initialize lists to populate with raw data
   R1_list = []

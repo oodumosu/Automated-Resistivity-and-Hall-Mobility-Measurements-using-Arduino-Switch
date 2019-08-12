@@ -1,5 +1,7 @@
 '''
-Program works with the way Labview will record the data. Does not record error margins for values obtained
+Program works with the way Labview will record the data (50 trials)
+Will calculate the magnitude of the electric field used from user input of amps and distance between field.
+Does not record error margins for values obtained.
 '''
 from math import log, pi, exp
 
@@ -12,23 +14,23 @@ def raw_data(filename, R1_list, R2_list, R3_list, R4_list, R5_list, R6_list, R7_
   all_lines = data_file.readlines()
   for i in range (len(all_lines)):
     curr_line = all_lines[i].split(",")
-  #Compile resitivity meausrements (first 100 lines)
-    if i < 100:
-      R1_list.append(float(curr_line[0]))
-      R2_list.append(float(curr_line[1]))
-      R3_list.append(float(curr_line[2]))
-      R4_list.append(float(curr_line[3]))
-      R5_list.append(float(curr_line[4]))
-      R6_list.append(float(curr_line[5]))
-      R7_list.append(float(curr_line[6]))
-      R8_list.append(float(curr_line[7]))
-  #Compile -B field measurements (lines 100-200)
-    elif 100 <= i < 200:
+  #Compile resitivity meausrements (first 50 lines)
+    if i < 50:
+      R1_list.append(abs(float(curr_line[0])))
+      R2_list.append(abs(float(curr_line[1])))
+      R3_list.append(abs(float(curr_line[2])))
+      R4_list.append(abs(float(curr_line[3])))
+      R5_list.append(abs(float(curr_line[4])))
+      R6_list.append(abs(float(curr_line[5])))
+      R7_list.append(abs(float(curr_line[6])))
+      R8_list.append(abs(float(curr_line[7])))
+  #Compile -B field measurements (lines 51-100)
+    elif 51 < i < 100:
       H1_list.append(float(curr_line[0]))
       H2_list.append(float(curr_line[1]))
       H3_list.append(float(curr_line[2]))
       H4_list.append(float(curr_line[3]))
-    #Compile +B field measurements (lines 200-300)
+    #Compile +B field measurements (lines 101-150)
     else:
       H5_list.append(float(curr_line[0]))
       H6_list.append(float(curr_line[1]))
@@ -50,7 +52,7 @@ def get_average(a_list):
 def error_check(R1, R2, R3, R4, R5, R6, R7, R8):
   '''
   Uses EQ8 & EQ9 (NIST) to check that error is <5% (preferably <3%)
-  :side effect: prints high error warning for the uncertain value(s), or notifies user of low uncertainity
+  :side effect: prints high error warning for the uncertain value(s), or notifies user of minimal uncertainity
   '''
   sum1 = R1 + R5
   sum2 = R2 + R6
@@ -58,10 +60,10 @@ def error_check(R1, R2, R3, R4, R5, R6, R7, R8):
   sum4 = R4 + R8
   p_error1 = abs((sum1-sum3)/sum3) * 100
   p_error2 = abs((sum2-sum4)/sum4) * 100
-  p_error3 = abs(R1 - R5)/R1 * 100
-  p_error4 = abs(R2 - R6)/R2 * 100
-  p_error5 = abs(R3 - R7)/R3 * 100
-  p_error6 = abs(R4 - R8)/R4 * 100
+  p_error3 = abs((R1 - R5)/R1) * 100
+  p_error4 = abs((R2 - R6)/R2) * 100
+  p_error5 = abs((R3 - R7)/R3) * 100
+  p_error6 = abs((R4 - R8)/R4) * 100
   print("\n----- (Percent) Error Checking -----")
   if p_error1 > 5:
     if p_error3 > p_error5:
@@ -246,6 +248,36 @@ def running_file(Rs, p, stype, scdens, bcdens, hmob, current, d, mag_field, user
   of.write(str(hmob))
   of.close()
 
+def Bfield():
+  '''
+  Use linearization of magetization curve to find the magnitude of the magnetic feild (Tesla--> Gauss) as a function of Current
+  :return: magnitude of magnetic field in gauss
+  '''
+  amps = float(input("Current of magnet (amps)? "))
+  dis = float(input("Gap distance between field plates (inches)? "))
+  if dis < 0.625:
+    tesla = (9.6 / 10) * amps
+    gauss = tesla * 10000
+    return gauss
+  elif 0.625 <= dis < 0.875:
+    tesla = (9.2 / 15) * amps
+    gauss = tesla * 10000
+    return gauss
+  elif 0.875 <= dis < 1.25:
+    tesla = 0.45 * amps
+    print(tesla)
+    gauss = tesla * 10000
+    print(gauss)
+    print(dis, amps, tesla, gauss)
+    return gauss
+  elif 1.25 <= dis < 1.75:
+    tesla = (8.6 / 30) * amps
+    gauss = tesla * 10000
+    return gauss
+  else:
+    tesla = (6.8 / 30) * amps
+    gauss = tesla * 10000
+    return gauss
   
 def main():
   '''
@@ -254,9 +286,9 @@ def main():
   print("\n------- WELCOME --------")
   #Get user input on data parameters
   filename = input("\n\"Input filename of raw data voltages (V) (.txt)\": ")
-  current = float(input("Input Current (in nA):  ")) 
+  current = float(input("Input Current of Current Source (in nA):  ")) 
   d = float(input("Input sample thickness (in nm): "))
-  mag_field = float(input("Input magnetic field (in G): "))
+  mag_field = Bfield()
   
   #Initialize lists to populate with raw data
   R1_list = []

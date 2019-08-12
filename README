@@ -4,3 +4,4 @@ Contributions
 This project was funded by Ithaca College H&S Summer Scholars Program and the Dana Internship Program, and completed in the summer of 2019.
 The idea for the Arduino to switch relay came from https://github.com/UPRM-Physics-and-Electronics/ArduSwitch-F454.git
 I used NIST's guide for data interpretation and charcaterization of the samples (https://www.nist.gov/pml/engineering-physics-division/popular-links/hall-effect/resistivity-and-hall-measurements)
+I referenced Thomas Erikson's (Ithaca College, 2016) Labview vi's for interface with Keithely Current Source & Nanovoltmeter.
